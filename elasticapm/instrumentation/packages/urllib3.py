@@ -61,7 +61,12 @@ def update_headers(args, kwargs, instance, transaction, trace_parent):
     :param trace_parent: the TraceParent object
     :return: an (args, kwargs) tuple
     """
-    from urllib3._version import __version__ as urllib3_version
+    # accessing the urllib3 version will not work in the older version
+    # so had to add a backof fac
+    try:
+        from urllib3._version import __version__ as urllib3_version
+    except Exception:
+        from urllib3 import __version__ as urllib3_version
 
     if urllib3_version.startswith("2") and len(args) >= 5 and args[4]:
         headers = args[4].copy()
